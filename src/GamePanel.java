@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,23 +10,75 @@ import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 Timer timer;
-GameObject object=new GameObject(10, 10, 100, 100);
+final int MENU_STATE = 0;
+final int GAME_STATE = 1;
+final int END_STATE = 2;
+int currentState=MENU_STATE;
 public GamePanel(){
 	timer=new Timer(1000/60, this);
 }
 void startGame() {
 	timer.start();
 }
+void updateMenuState() {
+
+}
+void updateGameState() {
+	
+}
+void updateEndState() {
+	
+}
+void drawMenuState(Graphics g) {
+	g.setColor(Color.BLUE);
+	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT); 
+}
+void drawGameState(Graphics g) {
+	g.setColor(Color.BLACK);
+	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+}
+void drawEndState(Graphics g) {
+	g.setColor(Color.RED);
+	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+}
 @Override
 public void actionPerformed(ActionEvent e) {
 	// TODO Auto-generated method stub
-	object.update();
+	 if(currentState == MENU_STATE){
+
+         updateMenuState();
+
+ }else if(currentState == GAME_STATE){
+
+         updateGameState();
+
+ }else if(currentState == END_STATE){
+
+         updateEndState();
+
+ }
+
+
 	repaint();
 }
 @Override
 
 public void paintComponent(Graphics g){
-object.draw(g);
+	 if(currentState == MENU_STATE){
+
+         drawMenuState(g);
+
+ }else if(currentState == GAME_STATE){
+
+         drawGameState(g);
+
+ }else if(currentState == END_STATE){
+
+         drawEndState(g);
+
+ }
+
+
         }
 @Override
 public void keyTyped(KeyEvent e) {
@@ -35,7 +88,20 @@ public void keyTyped(KeyEvent e) {
 @Override
 public void keyPressed(KeyEvent e) {
 	// TODO Auto-generated method stub
-	
+	if(e.getKeyCode()==KeyEvent.VK_ENTER) {
+	if(currentState==END_STATE){
+
+        currentState = MENU_STATE;
+
+}
+	else if(currentState== MENU_STATE) {
+		currentState=GAME_STATE;
+	}
+	else if(currentState==GAME_STATE) {
+		currentState=END_STATE;
+	}
+
+	}
 }
 @Override
 public void keyReleased(KeyEvent e) {
