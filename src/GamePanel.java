@@ -1,5 +1,8 @@
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,6 +13,10 @@ import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 Timer timer;
+Rocketship rocket=new Rocketship(250, 700, 50, 50);
+ObjectManager manager=new ObjectManager(rocket);
+Font titleFont=new Font("Arial", Font.PLAIN, 48);
+Font endFont= new Font("Arial", Font.PLAIN, 48);
 final int MENU_STATE = 0;
 final int GAME_STATE = 1;
 final int END_STATE = 2;
@@ -24,22 +31,30 @@ void updateMenuState() {
 
 }
 void updateGameState() {
-	
+	manager.update();
 }
 void updateEndState() {
 	
 }
 void drawMenuState(Graphics g) {
 	g.setColor(Color.BLUE);
-	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT); 
+	g.setFont(titleFont);
+	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+	g.setColor(Color.YELLOW);
+	Rectangle r=new Rectangle(LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+	drawCenteredString(g, "LEAGUE INVADERS", r, titleFont);
 }
 void drawGameState(Graphics g) {
 	g.setColor(Color.BLACK);
 	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+	manager.draw(g);
 }
 void drawEndState(Graphics g) {
 	g.setColor(Color.RED);
 	g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+	Rectangle r=new Rectangle(LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+	g.setColor(Color.BLACK);
+	drawCenteredString(g, "GAME OVER", r, endFont);
 }
 @Override
 public void actionPerformed(ActionEvent e) {
@@ -102,10 +117,37 @@ public void keyPressed(KeyEvent e) {
 	}
 
 	}
+	if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+		rocket.x=rocket.x-rocket.speed;
+	}
+	if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+		rocket.x=rocket.x+rocket.speed;
+	}
+	if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+		rocket.y=rocket.y+rocket.speed;
+	}
+	if (e.getKeyCode()==KeyEvent.VK_UP) {
+		rocket.y=rocket.y-rocket.speed;
+	}
+	if (e.getKeyCode()==KeyEvent.VK_SPACE) {
+		manager.addProjectile(new Projectile(rocket.x+20, rocket.y, 10, 10));
+	}
 }
 @Override
 public void keyReleased(KeyEvent e) {
 	// TODO Auto-generated method stub
 	
+}
+public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
+    // Get the FontMetrics
+    FontMetrics metrics = g.getFontMetrics(font);
+    // Determine the X coordinate for the text
+    int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+    // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+    int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+    // Set the font
+    g.setFont(font);
+    // Draw the String
+    g.drawString(text, x, y);
 }
 }
