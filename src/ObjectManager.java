@@ -57,7 +57,7 @@ public class ObjectManager {
 	}
 
 	void purgeObjects() {
-		for (int i = 0; i < aliens.size() - 1; i++) {
+		for (int i = 0; i < aliens.size(); i++) {
 			if (!aliens.get(i).isAlive) {
 				aliens.remove(i);
 			}
@@ -72,12 +72,12 @@ public class ObjectManager {
 	void checkCollision() {
 		for (Alien a : aliens) {
 			if (a.isAlive) {
-
 				if (rocket.collisionBox.intersects(a.collisionBox)) {
 					rocket.isAlive = false;
 					break;
 				} else {
 					for (Projectile p : projectiles) {
+
 						if (p.isAlive) {
 							if (a.collisionBox.intersects(p.collisionBox)) {
 								a.isAlive = false;

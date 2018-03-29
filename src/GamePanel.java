@@ -7,7 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -16,14 +19,38 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Rocketship rocket = new Rocketship(250, 700, 50, 50);
 	ObjectManager manager = new ObjectManager(rocket);
 	Font titleFont = new Font("Arial", Font.PLAIN, 48);
+	Font smallFont = new Font("Arial", Font.PLAIN, 20);
 	Font endFont = new Font("Arial", Font.PLAIN, 48);
 	final int MENU_STATE = 0;
 	final int GAME_STATE = 1;
 	final int END_STATE = 2;
 	int currentState = MENU_STATE;
-
+    public static BufferedImage alienImg;
+    public static BufferedImage rocketImg;
+    public static BufferedImage bulletImg;
+    public static BufferedImage spaceImg;
+	
 	public GamePanel() {
 		timer = new Timer(1000 / 60, this);
+	    try {
+
+            alienImg = ImageIO.read(this.getClass().getResourceAsStream("alien.png"));
+
+            rocketImg = ImageIO.read(this.getClass().getResourceAsStream("rocket.png"));
+
+            bulletImg = ImageIO.read(this.getClass().getResourceAsStream("bullet.png"));
+
+            spaceImg = ImageIO.read(this.getClass().getResourceAsStream("space.png"));
+
+    } catch (IOException e) {
+
+            // TODO Auto-generated catch block
+
+            e.printStackTrace();
+
+    }
+
+
 	}
 
 	void startGame() {
@@ -55,13 +82,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.YELLOW);
 		Rectangle r = new Rectangle(LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
 		drawCenteredString(g, "LEAGUE INVADERS", r, titleFont);
+		g.setFont(smallFont);
+		g.drawString("Press ENTER to start", 155, 600);
 	}
 
 	void drawGameState(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, LeagueInvaders.XWIDTH, LeagueInvaders.YHEIGHT);
+		g.drawImage(GamePanel.spaceImg, 0, 0, 500, 800, this);
 		manager.draw(g);
 		String a = Integer.toString(manager.getScore());
+		g.setColor(Color.RED);
 		g.drawString("Score:", 400, 50);
 		g.drawString(a, 450, 50);
 	}
